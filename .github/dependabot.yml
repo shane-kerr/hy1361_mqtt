@@ -3,7 +3,7 @@ updates:
   - package-ecosystem: "pip"
     directory: "/" 
     allow:
-      dependency-type: "all"
+      - dependency-type: "all"
     schedule:
       interval: "weekly"
     cooldown:
