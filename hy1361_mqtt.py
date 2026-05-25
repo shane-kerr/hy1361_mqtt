@@ -1,7 +1,8 @@
-import serial
-import time
 import struct
+import time
+
 import paho.mqtt.client as mqtt
+import serial
 
 MQTT_BROKER = "my_ip"
 MQTT_PORT = 1883
@@ -9,16 +10,17 @@ MQTT_USER = "my_user"
 MQTT_PASS = "my_password"
 MQTT_TOPIC = "soundmeter/spl"
 
+
 class HY1361:
-    def __init__(self, port='/dev/ttyUSB0'):
+    def __init__(self, port="/dev/ttyUSB0"):
         try:
             self.ser = serial.Serial(
                 port=port,
                 baudrate=115200,
                 bytesize=8,
-                parity='N',
+                parity="N",
                 stopbits=1,
-                timeout=1
+                timeout=1,
             )
             print(f"Connected to HY1361 on {port}")
         except serial.SerialException as e:
@@ -28,18 +30,20 @@ class HY1361:
     def read_packet(self):
         while True:
             byte = self.ser.read(1)
-            if byte == b'\x55':  # Start byte
+            if byte == b"\x55":  # Start byte
                 frame = byte + self.ser.read(5)
                 if len(frame) == 6 and frame[5] == 0xAA:
-                    value = struct.unpack('<H', frame[2:4])[0]
+                    value = struct.unpack("<H", frame[2:4])[0]
                     return value / 10.0
                 else:
                     print(f"Invalid packet: {frame.hex()}")
             else:
                 continue
 
+
 def on_connect(client, userdata, flags, rc):
     print(f"Connected to MQTT Broker with result code {rc}")
+
 
 if __name__ == "__main__":
     # Setup MQTT client

@@ -1,23 +1,25 @@
-import serial
-import time
-import struct
-import paho.mqtt.client as mqtt
 import logging
+import struct
 import sys
+import time
+
+import paho.mqtt.client as mqtt
+import serial
 
 MQTT_BROKER = "my_ip"
 MQTT_PORT = 1883
 MQTT_USER = "my_user"
 MQTT_PASS = "my_password"
 MQTT_TOPIC = "soundmeter/spl"
-SERIAL_PORT = '/dev/ttyUSB0'
+SERIAL_PORT = "/dev/ttyUSB0"
 
 # Setup logging (outputs to stdout, systemd captures this)
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s %(levelname)s: %(message)s',
-    stream=sys.stdout
+    format="%(asctime)s %(levelname)s: %(message)s",
+    stream=sys.stdout,
 )
+
 
 class HY1361:
     def __init__(self, port=SERIAL_PORT):
@@ -32,9 +34,9 @@ class HY1361:
                     port=self.port,
                     baudrate=115200,
                     bytesize=8,
-                    parity='N',
+                    parity="N",
                     stopbits=1,
-                    timeout=1
+                    timeout=1,
                 )
                 logging.info(f"Connected to HY1361 on {self.port}")
                 break
@@ -46,10 +48,10 @@ class HY1361:
         while True:
             try:
                 byte = self.ser.read(1)
-                if byte == b'\x55':  # Start byte
+                if byte == b"\x55":  # Start byte
                     frame = byte + self.ser.read(5)
                     if len(frame) == 6 and frame[5] == 0xAA:
-                        value = struct.unpack('<H', frame[2:4])[0]
+                        value = struct.unpack("<H", frame[2:4])[0]
                         return value / 10.0
                     else:
                         logging.warning(f"Invalid packet: {frame.hex()}")
@@ -61,11 +63,13 @@ class HY1361:
             except Exception as e:
                 logging.error(f"Unexpected error reading serial data: {e}")
 
+
 def on_connect(client, userdata, flags, rc):
     if rc == 0:
         logging.info("Connected to MQTT Broker successfully")
     else:
         logging.error(f"Failed to connect to MQTT Broker, return code {rc}")
+
 
 if __name__ == "__main__":
     client = mqtt.Client()
