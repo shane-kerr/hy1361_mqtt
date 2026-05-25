@@ -33,7 +33,7 @@ class HY1361:
             if byte == b"\x55":  # Start byte
                 frame = byte + self.ser.read(5)
                 if len(frame) == 6 and frame[5] == 0xAA:
-                    value = struct.unpack("<H", frame[2:4])[0]
+                    value = ((frame[1] - 1) * 256) + struct.unpack("<H", frame[2:4])[0]
                     return value / 10.0
                 else:
                     print(f"Invalid packet: {frame.hex()}")
