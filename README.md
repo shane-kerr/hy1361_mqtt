@@ -2,7 +2,7 @@
 
 A simple script to read out the HY1361 sound level meter and publish the data to an MQTT server.
 
-Work in progress. Readings >55db seem to be off, something to dig in (protocol).
+Work in progress.
 
 ---
 
@@ -18,7 +18,7 @@ Work in progress. Readings >55db seem to be off, something to dig in (protocol).
 Install dependencies:
 
 ```bash
-pip3 install pyserial paho-mqtt
+pip3 install -r requirements.txt
 ```
 
 ### Add the following MQTT sensor configuration to your Home Assistant setup:
@@ -85,16 +85,20 @@ sudo systemctl status hy1361_mqtt.service
 
 
 ## Configuration
-MQTT broker IP, port, username, and password are configured inside hy1361_mqtt_service.py (edit variables at the top).
+MQTT broker IP, port, username, and password are configured inside `hy1361_mqtt_service.py` (edit variables at the top).
 
-The serial port defaults to /dev/ttyUSB0, but can be changed in the script if your device is on a different port.
+The serial port defaults to `/dev/ttyUSB0`, but can be changed in the script if your device is on a different port.
 
 The MQTT topic used is soundmeter/spl.
 
 ## Troubleshooting
-Ensure the user running the service (pi in example) has read/write access to the serial device /dev/ttyUSB0.
+Ensure the user running the service (pi in example) has read/write access to the serial device `/dev/ttyUSB0`.
 
-Check service logs via journalctl -u hy1361_mqtt for detailed error messages.
+Check service logs via:
+```bash
+journalctl -u hy1361_mqtt
+```
+For detailed error messages.
 
 The service automatically attempts reconnects on MQTT or serial connection failures.
 
