@@ -1,0 +1,10 @@
+version: 2
+updates:
+  - package-ecosystem: "pip"
+    directory: "/" 
+    allow:
+      - dependency-type: "all"
+    schedule:
+      interval: "weekly"
+    cooldown:
+      default-days: 5
