@@ -91,7 +91,6 @@ if __name__ == "__main__":
             spl = meter.read_packet()
             logging.info(f"Sound Level: {spl:.1f} dB")
             client.publish(MQTT_TOPIC, f"{spl:.1f}")
-            time.sleep(0.5)
     except KeyboardInterrupt:
         logging.info("Exiting on user interrupt")
     except Exception as e:
